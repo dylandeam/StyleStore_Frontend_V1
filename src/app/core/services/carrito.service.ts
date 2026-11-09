@@ -82,6 +82,7 @@ export interface CatalogoItem {
       precio_original?: number;
       precio_variante?: number | null;
       medidas?: Record<string, number>;
+      offline_checkout_links?: Record<string, string>;
     }>;
   }>;
   stock_total: number;

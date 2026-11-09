@@ -1,0 +1,62 @@
+<main class="offline-payment-page">
+  <section class="offline-payment-shell" aria-live="polite">
+    <header class="payment-header">
+      <div class="brand-mark" aria-hidden="true">S</div>
+      <div>
+        <h1>Completa la compra preparada</h1>
+        <p>Pago seguro para una operación iniciada sin conexión</p>
+      </div>
+    </header>
+
+    <div class="loading-state" *ngIf="loading()">
+      <span class="spinner" aria-hidden="true"></span>
+      <strong>Validando el enlace…</strong>
+      <p>Estamos comprobando la tienda, el cliente y la prenda.</p>
+    </div>
+
+    <div class="message warning" *ngIf="!loading() && canceled() && !error()">
+      El pago fue cancelado. No se realizó ningún cobro y puedes intentarlo otra vez.
+    </div>
+
+    <div class="message error" *ngIf="error()">{{ error() }}</div>
+
+    <ng-container *ngIf="!loading() && preview() as item">
+      <div class="status-line">
+        <span>Compra vinculada a</span>
+        <strong>{{ item.cliente }}</strong>
+      </div>
+
+      <div class="purchase-summary">
+        <div>
+          <h2>{{ item.producto }}</h2>
+          <p>{{ item.color || 'Color estándar' }} · Talla {{ item.talla || 'única' }}</p>
+          <p>{{ item.sucursal }} · {{ item.cantidad }} unidad(es)</p>
+        </div>
+        <div class="price-block">
+          <span>Total</span>
+          <strong>Bs. {{ item.total | number:'1.2-2' }}</strong>
+        </div>
+      </div>
+
+      <div class="message success" *ngIf="item.estado === 'aprobado'">
+        Este pago ya fue aprobado. La compra quedó registrada para el cliente original.
+      </div>
+      <div class="message warning" *ngIf="item.estado === 'reembolsado'">
+        El pago fue reembolsado porque el stock se agotó antes de confirmar la compra.
+      </div>
+      <div class="message error" *ngIf="item.estado === 'agotado'">
+        La prenda ya no tiene stock. No se iniciará ningún cobro.
+      </div>
+
+      <button class="paypal-button" type="button" (click)="pagar()" [disabled]="processing() || !canPay">
+        <span *ngIf="!processing()">Continuar al Sandbox de PayPal</span>
+        <span *ngIf="processing()">Preparando pago seguro…</span>
+      </button>
+
+      <p class="security-note">
+        El enlace solo puede comprar esta variante para la cuenta que lo generó. El stock se valida al
+        capturar el pago; si existe un conflicto, el reembolso y la notificación son automáticos.
+      </p>
+    </ng-container>
+  </section>
+</main>

@@ -31,6 +31,27 @@ export interface PayPalReconciliationItem {
   mensaje: string;
 }
 
+export interface OfflineCheckoutPreview {
+  producto: string;
+  color?: string | null;
+  talla?: string | null;
+  sucursal: string;
+  cantidad: number;
+  precio_unitario: number;
+  total: number;
+  moneda: string;
+  cliente: string;
+  estado: string;
+  orden_venta_id?: number | null;
+}
+
+export interface OfflineCheckoutStartResponse extends OfflineCheckoutPreview {
+  paypal_order_id: string;
+  approve_url: string;
+  paypal_total?: string | null;
+  paypal_currency?: string | null;
+}
+
 export interface CobroCajaResponse {
   pago_id?: number;
   orden_venta_id: number;
@@ -80,6 +101,17 @@ export class PagosService {
 
   reconciliarPendientesPayPal(): Observable<PayPalReconciliationItem[]> {
     return this.http.post<PayPalReconciliationItem[]>(`${this.apiUrl}/paypal/reconciliar-pendientes`, {});
+  }
+
+  getOfflineCheckout(token: string): Observable<OfflineCheckoutPreview> {
+    return this.http.get<OfflineCheckoutPreview>(`${this.apiUrl}/paypal/offline/${encodeURIComponent(token)}`);
+  }
+
+  crearOrdenOfflinePayPal(token: string): Observable<OfflineCheckoutStartResponse> {
+    return this.http.post<OfflineCheckoutStartResponse>(
+      `${this.apiUrl}/paypal/offline/${encodeURIComponent(token)}/crear-orden`,
+      {},
+    );
   }
 
   cobrarEnCaja(ordenVentaId: number, efectivoRecibido: number, metodoPago: string = 'efectivo'): Observable<CobroCajaResponse> {

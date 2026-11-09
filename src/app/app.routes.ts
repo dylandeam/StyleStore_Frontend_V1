@@ -54,6 +54,7 @@ import { ProcesosOfflineComponent } from './features/admin/procesos-offline/proc
 import { ExperienciaComponent } from './features/cuenta/experiencia/experiencia.component';
 import { CampanasComponent } from './features/admin/notificaciones/campanas.component';
 import { BrandingComponent } from './features/admin/branding/branding.component';
+import { OfflinePaypalLinkComponent } from './features/pagos/offline-paypal-link/offline-paypal-link.component';
 
 export const routes: Routes = [
   {
@@ -79,6 +80,15 @@ export const routes: Routes = [
   {
     path: 'cuenta/confirmar-password',
     component: ConfirmarPasswordComponent,
+  },
+  // Rutas públicas necesarias cuando el pago se abre desde otro dispositivo.
+  {
+    path: 'pago-offline/:token',
+    component: OfflinePaypalLinkComponent,
+  },
+  {
+    path: 'paypal-return',
+    component: PaypalReturnComponent,
   },
   // Rutas Públicas — Delivery Tracker (sin auth)
   {
@@ -344,11 +354,6 @@ export const routes: Routes = [
       {
         path: 'carrito',
         component: CarritoComponent,
-      },
-      // Retorno tras pago en PayPal
-      {
-        path: 'paypal-return',
-        component: PaypalReturnComponent,
       },
       // Caja y Cobros POS en Efectivo
       {

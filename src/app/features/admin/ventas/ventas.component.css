@@ -4,6 +4,10 @@
 
 .page-header {
   margin-bottom: 24px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #172536;
 }
 
 .header-titles h2 {
@@ -92,7 +96,15 @@
   padding: 14px 16px;
   border-bottom: 1px solid #F1ECE1;
   font-size: 0.875rem;
+  background: #ffffff;
+  color: #172536 !important;
 }
+
+.data-table td strong,
+.data-table td .text-navy { color: #172536 !important; }
+.data-table td .text-muted { color: #526175 !important; }
+.data-table tbody tr:hover td { background: #f8fafc; }
+.data-table .btn-icon { color: #172536 !important; background: #ffffff; }
 
 .badge {
   display: inline-block;

@@ -216,7 +216,7 @@
             [disabled]="agregando || !existenciaSeleccionada || existenciaSeleccionada.cantidad <= 0"
             (click)="agregarAlCarrito(true)"
           >
-            ⚡ Comprar Ahora
+            {{ offlineState.online() ? '⚡ Comprar Ahora' : '🔗 Comprar mediante enlace' }}
           </button>
 
           <button
@@ -229,6 +229,27 @@
             🔖 Reservar Prenda
           </button>
         </div>
+
+        <section class="offline-checkout-card" *ngIf="!offlineState.online()" aria-live="polite">
+          <div class="offline-checkout-copy">
+            <strong>{{ compraOfflinePreparada ? 'Compra offline preparada' : 'Enlace no disponible para esta cantidad' }}</strong>
+            <p *ngIf="compraOfflinePreparada">
+              Este enlace está vinculado a tu cuenta, esta prenda y la cantidad elegida. Ábrelo desde otro
+              dispositivo con conexión para pagar con PayPal; el stock se validará al confirmar el cobro.
+            </p>
+            <p *ngIf="!compraOfflinePreparada">
+              Reduce la cantidad o vuelve a abrir esta prenda una vez con conexión para guardar un enlace seguro.
+            </p>
+          </div>
+          <div class="offline-link-row" *ngIf="offlineCheckoutLink as purchaseLink">
+            <input type="text" [value]="purchaseLink" readonly aria-label="Enlace de compra offline preparado" />
+            <button type="button" class="btn-offline-link" (click)="copiarEnlaceCompraOffline()">Copiar enlace</button>
+            <button type="button" class="btn-offline-share" (click)="compartirEnlaceCompraOffline()">Compartir</button>
+          </div>
+          <small *ngIf="compraOfflinePreparada">
+            Si el stock se agota antes de conciliar el pago, el sistema reembolsa PayPal y te notifica automáticamente.
+          </small>
+        </section>
 
         <!-- Alerta de reposición de stock si no hay existencias -->
         <div class="stock-agotado-box" *ngIf="existenciaSeleccionada && existenciaSeleccionada.cantidad <= 0">

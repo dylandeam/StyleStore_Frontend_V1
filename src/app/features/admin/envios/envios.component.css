@@ -4,6 +4,10 @@
 
 .page-header {
   margin-bottom: 24px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #172536;
 }
 
 .header-titles h2 {
@@ -52,7 +56,20 @@
   padding: 14px 16px;
   border-bottom: 1px solid #F1ECE1;
   font-size: 0.875rem;
+  background: #ffffff;
+  color: #172536 !important;
 }
+
+.data-table td strong,
+.data-table .delivery-cell,
+.data-table .delivery-conductor-badge { color: #172536 !important; }
+.data-table .text-muted,
+.data-table .tracking-token { color: #526175 !important; }
+.data-table tbody tr:hover td { background: #f8fafc; }
+.data-table .btn-icon { color: #172536 !important; background: #ffffff; }
+
+.modal-card,
+.modal-card .modal-body { color: #172536 !important; }
 
 .badge {
   display: inline-block;

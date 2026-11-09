@@ -126,6 +126,15 @@ export class ProductoDetalleComponent implements OnInit {
     return Number(this.existencia()?.precio_original ?? this.productoData()?.precio ?? 0);
   }
 
+  get offlineCheckoutLink(): string | null {
+    const links = this.existencia()?.offline_checkout_links as Record<string, string> | undefined;
+    return links?.[String(this.cantidadValue())] || null;
+  }
+
+  get compraOfflinePreparada(): boolean {
+    return !this.offlineState.online() && !!this.offlineCheckoutLink;
+  }
+
   get tienePrecioDiferentePorTalla(): boolean {
     const product = this.productoData();
     const existence = this.existencia();
@@ -519,6 +528,15 @@ export class ProductoDetalleComponent implements OnInit {
       return;
     }
 
+    if (redirigirAlCheckout && !this.offlineState.online()) {
+      if (this.offlineCheckoutLink) {
+        this.mostrarToast('Enlace seguro listo. Cópialo o compártelo con un dispositivo que tenga conexión.');
+      } else {
+        this.mostrarToast('Esta cantidad no tiene un enlace preparado. Reduce la cantidad o abre la prenda una vez con conexión.');
+      }
+      return;
+    }
+
     // Sincronizar sucursal de donde se extrae la prenda físicamente
     if (ex.sucursal_id) {
       this.branchService.setBranch(ex.sucursal_id, this.sucursalesList());
@@ -543,6 +561,39 @@ export class ProductoDetalleComponent implements OnInit {
         this.mostrarToast('Error al agregar la prenda al carrito.');
       },
     });
+  }
+
+  async copiarEnlaceCompraOffline(): Promise<void> {
+    const link = this.offlineCheckoutLink;
+    if (!link) return;
+    try {
+      await navigator.clipboard.writeText(link);
+      this.mostrarToast('Enlace de compra copiado. Ábrelo desde un dispositivo con conexión.');
+    } catch {
+      const input = document.createElement('textarea');
+      input.value = link;
+      input.style.position = 'fixed';
+      input.style.opacity = '0';
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      input.remove();
+      this.mostrarToast('Enlace de compra copiado.');
+    }
+  }
+
+  async compartirEnlaceCompraOffline(): Promise<void> {
+    const link = this.offlineCheckoutLink;
+    if (!link) return;
+    if (navigator.share) {
+      await navigator.share({
+        title: `Comprar ${this.productoData()?.nombre || 'prenda'}`,
+        text: 'Abre este enlace con conexión para completar el pago seguro de mi compra.',
+        url: link,
+      });
+      return;
+    }
+    await this.copiarEnlaceCompraOffline();
   }
 
   navegarAProducto(codigo: string): void {
