@@ -193,6 +193,7 @@
 
 .recibo-modal-card {
   background: #ffffff;
+  color: #172536;
   border-radius: 18px;
   width: 100%;
   max-width: 580px;
@@ -235,6 +236,16 @@
 .recibo-printable {
   padding: 30px 32px;
   background: #ffffff;
+  color: #172536 !important;
+  color-scheme: light;
+}
+
+/* El comprobante es un documento: su tinta no depende del tema del tenant. */
+.recibo-printable strong,
+.recibo-printable code,
+.recibo-items-table td,
+.recibo-items-table tfoot td {
+  color: #172536 !important;
 }
 
 .recibo-store-header {
@@ -288,7 +299,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   font-size: 0.84rem;
-  color: #334155;
+  color: #334155 !important;
   line-height: 1.5;
   margin-bottom: 20px;
 }
@@ -313,6 +324,13 @@
   border-bottom: 1px solid #f1f5f9;
 }
 
+.recibo-item-variant {
+  margin-top: 2px;
+  color: #526175 !important;
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
 .text-right {
   text-align: right;
 }
@@ -322,8 +340,9 @@
 }
 
 .total-recibo {
-  color: #b8860b;
+  color: #8a6100 !important;
   font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .recibo-footer-note {
@@ -342,8 +361,20 @@
 
 .recibo-footer-note .small {
   font-size: 0.74rem;
-  color: #94a3b8;
+  color: #526175 !important;
   font-weight: 400;
+}
+
+@media (max-width: 600px) {
+  .modal-backdrop { padding: 10px; }
+  .recibo-modal-card { max-height: 94vh; border-radius: 14px; }
+  .recibo-printable { padding: 22px 18px; }
+  .recibo-store-header { gap: 16px; }
+  .store-brand h2 { font-size: 1.25rem; }
+  .recibo-info-grid { grid-template-columns: 1fr; }
+  .recibo-items-table { font-size: 0.78rem; }
+  .recibo-actions { flex-wrap: wrap; }
+  .recibo-actions button { flex: 1 1 180px; justify-content: center; }
 }
 
 .recibo-actions {

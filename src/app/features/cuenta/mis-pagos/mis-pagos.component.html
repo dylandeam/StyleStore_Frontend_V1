@@ -128,7 +128,7 @@
             <tr *ngFor="let it of selectedRecibo.items">
               <td>
                 <strong>{{ it.producto }}</strong>
-                <div class="small text-muted">{{ it.talla }} / {{ it.color }}</div>
+                <div class="recibo-item-variant">{{ it.talla }} / {{ it.color }}</div>
               </td>
               <td class="text-center">{{ it.cantidad }}</td>
               <td class="text-right">Bs. {{ it.precio_unitario | number:'1.2-2' }}</td>
