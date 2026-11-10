@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface SolicitudCambioDevolucion {
@@ -73,6 +73,8 @@ export interface SolicitudCambioCreate {
 export class CambiosService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/cambios`;
+  private readonly changesUpdatedSubject = new Subject<{ solicitudId: number; estado: string }>();
+  readonly changesUpdated$ = this.changesUpdatedSubject.asObservable();
 
   solicitarCambio(payload: {
     orden_venta_id: number;
@@ -95,7 +97,7 @@ export class CambiosService {
   }
 
   listarSolicitudesStaff(sucursalId?: number, estado?: string): Observable<SolicitudCambioDevolucion[]> {
-    let params = new HttpParams();
+    let params = new HttpParams().set('_t', Date.now().toString());
     if (sucursalId !== undefined && sucursalId !== null) {
       params = params.set('sucursal_id', sucursalId.toString());
     }
@@ -126,7 +128,18 @@ export class CambiosService {
   }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/${solicitudId}/completar`, {
       ...data,
-    });
+    }).pipe(tap((result) => this.publishChange(solicitudId, result?.estado || 'completada')));
+  }
+
+  private publishChange(solicitudId: number, estado: string): void {
+    const update = { solicitudId, estado };
+    this.changesUpdatedSubject.next(update);
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem('stylestore:cambios-updated', JSON.stringify({ ...update, timestamp: Date.now() }));
+    } catch {
+      // La sincronización local no debe bloquear una liquidación ya confirmada.
+    }
   }
 
   getPolitica(): Observable<{ plazo_cambios_dias: number }> {

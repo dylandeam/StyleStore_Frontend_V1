@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CambiosService, InventarioCambio, SolicitudCambioDevolucion } from '../../../core/services/cambios.service';
@@ -12,7 +12,7 @@ import { Sucursal } from '../../../core/models/sucursal.model';
   templateUrl: './cambios-list.component.html',
   styleUrls: ['./cambios-list.component.css'],
 })
-export class CambiosListComponent implements OnInit {
+export class CambiosListComponent implements OnInit, OnDestroy {
   private cambiosService = inject(CambiosService);
   private sucursalService = inject(SucursalService);
   private cdr = inject(ChangeDetectorRef);
@@ -43,11 +43,40 @@ export class CambiosListComponent implements OnInit {
   guardandoPolitica = false;
 
   toastMessage = '';
+  lastUpdatedAt: Date | null = null;
+  private refreshTimer?: ReturnType<typeof setInterval>;
+  private changesSubscription?: { unsubscribe: () => void };
+  private readonly handleFocus = (): void => this.cargarSolicitudes(true);
+  private readonly handleVisibility = (): void => {
+    if (document.visibilityState === 'visible') this.cargarSolicitudes(true);
+  };
+  private readonly handleStorage = (event: StorageEvent): void => {
+    if (event.key === 'stylestore:cambios-updated') this.cargarSolicitudes(true);
+  };
 
   ngOnInit(): void {
     this.cargarSucursales();
     this.cargarSolicitudes();
     this.cargarPolitica();
+    this.changesSubscription = this.cambiosService.changesUpdated$.subscribe(() => this.cargarSolicitudes(true));
+    this.refreshTimer = setInterval(() => {
+      if (typeof document === 'undefined' || document.visibilityState === 'visible') this.cargarSolicitudes(true);
+    }, 15000);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focus', this.handleFocus);
+      window.addEventListener('storage', this.handleStorage);
+      document.addEventListener('visibilitychange', this.handleVisibility);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshTimer) clearInterval(this.refreshTimer);
+    this.changesSubscription?.unsubscribe();
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('focus', this.handleFocus);
+      window.removeEventListener('storage', this.handleStorage);
+      document.removeEventListener('visibilitychange', this.handleVisibility);
+    }
   }
 
   cargarPolitica(): void {
@@ -73,8 +102,8 @@ export class CambiosListComponent implements OnInit {
     });
   }
 
-  cargarSolicitudes(): void {
-    this.loading = true;
+  cargarSolicitudes(silent = false): void {
+    if (!silent) this.loading = true;
     this.cdr.markForCheck();
 
     this.cambiosService
@@ -83,6 +112,7 @@ export class CambiosListComponent implements OnInit {
         next: (data) => {
           this.solicitudes = [...(data || [])];
           this.loading = false;
+          this.lastUpdatedAt = new Date();
           this.cdr.markForCheck();
           this.cdr.detectChanges();
         },

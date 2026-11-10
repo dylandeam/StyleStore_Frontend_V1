@@ -79,6 +79,18 @@
   align-items: flex-end;
 }
 
+.refresh-control {
+  display: grid;
+  justify-items: end;
+  gap: 5px;
+}
+
+.refresh-control small {
+  color: #526174;
+  font-size: .7rem;
+  font-variant-numeric: tabular-nums;
+}
+
 .btn-refresh {
   background: #f1f5f9;
   color: #14263D;

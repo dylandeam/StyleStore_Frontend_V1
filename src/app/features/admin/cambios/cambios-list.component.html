@@ -41,9 +41,12 @@
       </div>
 
       <div class="filter-col-btn">
-        <button class="btn-refresh" (click)="cargarSolicitudes()">
-          <i class="bi bi-arrow-clockwise"></i> Actualizar
-        </button>
+        <div class="refresh-control">
+          <button class="btn-refresh" (click)="cargarSolicitudes()">
+            <i class="bi bi-arrow-clockwise"></i> Actualizar estados
+          </button>
+          <small *ngIf="lastUpdatedAt">Actualizado {{ lastUpdatedAt | date:'HH:mm:ss' }}</small>
+        </div>
       </div>
     </div>
   </div>
@@ -154,7 +157,7 @@
 
                 <!-- Si ya está completada o rechazada: Ver info -->
                 <span *ngIf="sol.estado === 'completada'" class="badge-completado">
-                  <i class="bi bi-check-all"></i> Procesado
+                  <i class="bi bi-check-all"></i> Operación completada en caja
                 </span>
                 <span *ngIf="sol.estado === 'rechazada'" class="text-muted small">
                   Rechazado
