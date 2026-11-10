@@ -12,6 +12,30 @@ export interface DetalleVenta {
   subtotal: number;
 }
 
+export interface CambioDevolucionOrden {
+  id: number;
+  tipo: 'cambio' | 'devolucion';
+  motivo: string;
+  descripcion_problema: string;
+  estado: string;
+  respuesta_encargado?: string;
+  fecha_programada?: string;
+  producto_original?: string;
+  talla_original?: string;
+  color_original?: string;
+  producto_reemplazo?: string;
+  talla_reemplazo?: string;
+  color_reemplazo?: string;
+  precio_original?: number;
+  precio_nuevo?: number;
+  monto_adicional?: number;
+  monto_reembolsado?: number;
+  nota_venta_numero?: string;
+  orden_ajuste_id?: number;
+  reponer_prenda_original?: boolean;
+  created_at?: string;
+}
+
 export interface OrdenVenta {
   id: number;
   fecha: string;
@@ -45,6 +69,7 @@ export interface OrdenVenta {
   paypal_capture_id?: string;
   paypal_refund_id?: string;
   refund_reason?: string;
+  cambios_devoluciones?: CambioDevolucionOrden[];
 }
 
 export interface VentaItemCreate {

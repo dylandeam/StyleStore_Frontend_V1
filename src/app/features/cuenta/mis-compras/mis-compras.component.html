@@ -224,6 +224,43 @@
           </div>
         </div>
 
+        <section class="exchange-history" *ngIf="selectedOrden.cambios_devoluciones?.length" aria-labelledby="exchange-history-title">
+          <div class="exchange-history-heading">
+            <div>
+              <h5 id="exchange-history-title">Cambios y devoluciones de esta compra</h5>
+              <p>Seguimiento completo de la solicitud y su liquidación en caja.</p>
+            </div>
+            <span>{{ selectedOrden.cambios_devoluciones?.length }} operación(es)</span>
+          </div>
+
+          <article class="exchange-record" *ngFor="let cambio of selectedOrden.cambios_devoluciones">
+            <div class="exchange-record-topline">
+              <strong>{{ cambio.tipo === 'cambio' ? 'Cambio de prenda' : 'Devolución y reembolso' }} #{{ cambio.id }}</strong>
+              <span class="exchange-status" [attr.data-status]="cambio.estado">{{ cambio.estado | uppercase }}</span>
+            </div>
+            <div class="exchange-products">
+              <div>
+                <small>Prenda original</small>
+                <strong>{{ cambio.producto_original || 'Artículo de la orden' }}</strong>
+                <span>{{ cambio.talla_original || 'Sin talla' }} · {{ cambio.color_original || 'Sin color' }}</span>
+              </div>
+              <span class="exchange-direction" aria-hidden="true">→</span>
+              <div>
+                <small>{{ cambio.tipo === 'cambio' ? 'Prenda entregada' : 'Resultado' }}</small>
+                <strong>{{ cambio.tipo === 'cambio' ? (cambio.producto_reemplazo || 'Pendiente de selección') : 'Devolución de la prenda' }}</strong>
+                <span *ngIf="cambio.tipo === 'cambio'">{{ cambio.talla_reemplazo || 'Sin talla' }} · {{ cambio.color_reemplazo || 'Sin color' }}</span>
+              </div>
+            </div>
+            <dl class="exchange-facts">
+              <div><dt>Motivo</dt><dd>{{ cambio.motivo.replace('_', ' ') }}</dd></div>
+              <div *ngIf="cambio.nota_venta_numero"><dt>Comprobante</dt><dd>{{ cambio.nota_venta_numero }}</dd></div>
+              <div *ngIf="cambio.monto_adicional"><dt>Diferencia cobrada</dt><dd>Bs. {{ cambio.monto_adicional | number:'1.2-2' }}</dd></div>
+              <div *ngIf="cambio.monto_reembolsado"><dt>Dinero devuelto</dt><dd>Bs. {{ cambio.monto_reembolsado | number:'1.2-2' }}</dd></div>
+            </dl>
+            <p class="exchange-response" *ngIf="cambio.respuesta_encargado"><strong>Respuesta de tienda:</strong> {{ cambio.respuesta_encargado }}</p>
+          </article>
+        </section>
+
         <!-- Información de Envío si aplica -->
         <div class="envio-box-modal" *ngIf="selectedOrden.envio">
           <div class="envio-modal-title-row">

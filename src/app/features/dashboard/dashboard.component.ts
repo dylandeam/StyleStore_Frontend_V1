@@ -195,7 +195,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  openIndicator(indicator: 'ventas_sucursal' | 'stock_categoria' | 'historial_compras'): void {
+  openIndicator(indicator: 'ventas_sucursal' | 'stock_categoria' | 'historial_compras' | 'reservas_vigentes' | 'cambios_devoluciones' | 'pagos_caja' | 'pagos_paypal'): void {
     this.indicatorLoading.set(true);
     this.indicatorError.set(null);
     this.reportesService.getDashboardIndicator(indicator, this.selectedSucursalId || undefined).subscribe({
