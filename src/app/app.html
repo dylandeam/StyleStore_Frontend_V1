@@ -1,5 +1,8 @@
 @if (offlineState.showStatus()) {
   <aside class="connectivity-banner" role="status" aria-live="polite">
+    @if (offlineState.updateAvailable()) {
+      <span><strong>Nueva versión disponible.</strong> Actualiza para usar las correcciones más recientes.</span>
+    }
     @if (!offlineState.online()) {
       <span><strong>Sin conexión.</strong> Mostramos los datos guardados en este dispositivo.</span>
     } @else if (offlineState.usingCachedCatalog()) {
@@ -11,7 +14,7 @@
       <span>{{ offlineState.pendingOperations() }} operación(es) pendientes de sincronización.</span>
     }
     @if (offlineState.updateAvailable()) {
-      <button type="button" (click)="applyUpdate()">Actualizar aplicación</button>
+      <button type="button" (click)="applyUpdate()">Actualizar ahora</button>
     }
     @if (offlineState.pendingOperations() > 0) {
       <a routerLink="/cuenta/operaciones-pendientes">Ver cola</a>

@@ -25,6 +25,11 @@
   cursor: pointer;
 }
 
+.connectivity-banner button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
 .connectivity-banner a {
   color: #fff;
   font-weight: 800;
@@ -101,6 +106,8 @@
 }
 
 @media (max-width: 620px) {
+  .connectivity-banner { flex-wrap: wrap; gap: .55rem; padding: .65rem .8rem; text-align: center; }
+  .connectivity-banner span { flex: 1 1 100%; }
   .install-banner { right:.6rem; bottom:.6rem; grid-template-columns:minmax(0,1fr) auto; width:calc(100vw - 1.2rem); padding:.7rem; border-radius:15px; }
   .install-banner .install-icon { display:none; }
   .install-banner span:nth-child(2) { min-width:0; }
