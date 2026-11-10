@@ -74,6 +74,12 @@ export class ReservaService {
     return this.http.patch<Reserva>(`${this.apiUrl}/${reservaId}/estado`, { estado });
   }
 
+  enviarACaja(reservaId: number): Observable<{ reserva_id: number; orden_venta_id: number; estado: string; total: number }> {
+    return this.http.post<{ reserva_id: number; orden_venta_id: number; estado: string; total: number }>(
+      `${this.apiUrl}/${reservaId}/enviar-a-caja`, {}
+    );
+  }
+
   deleteReserva(reservaId: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${reservaId}`);
   }

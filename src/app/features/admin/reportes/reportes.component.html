@@ -136,6 +136,42 @@
           <p class="ai-formatted-text" style="white-space: pre-line;">{{ respuestaIA }}</p>
         </div>
       </div>
+
+      <section class="ai-visualization" *ngIf="visualizacionIA as visual" [attr.aria-label]="visual.titulo">
+        <div class="ai-visualization-header">
+          <div>
+            <h3>{{ visual.titulo }}</h3>
+            <p>Datos calculados directamente desde las operaciones del tenant activo.</p>
+          </div>
+          <div class="ai-view-switch" role="group" aria-label="Formato del resultado">
+            <button type="button" [class.active]="vistaVisualizacionIA === 'grafico'" (click)="vistaVisualizacionIA = 'grafico'">
+              Gráfico
+            </button>
+            <button type="button" [class.active]="vistaVisualizacionIA === 'tabla'" (click)="vistaVisualizacionIA = 'tabla'">
+              Tabla
+            </button>
+          </div>
+        </div>
+
+        <div class="ai-bar-chart" *ngIf="vistaVisualizacionIA === 'grafico'" role="img" [attr.aria-label]="visual.titulo">
+          <div class="ai-bar-item" *ngFor="let etiqueta of visual.etiquetas; let i = index">
+            <span class="ai-bar-value">{{ visual.unidad }} {{ visual.series[0].valores[i] | number:'1.2-2' }}</span>
+            <div class="ai-bar-track">
+              <div class="ai-bar-fill" [style.height.%]="alturaBarraIA(visual.series[0].valores[i])"></div>
+            </div>
+            <span class="ai-bar-label">{{ etiqueta }}</span>
+          </div>
+        </div>
+
+        <div class="ai-data-table-wrap" *ngIf="vistaVisualizacionIA === 'tabla'">
+          <table class="ai-data-table">
+            <thead><tr><th *ngFor="let columna of visual.columnas">{{ columna }}</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let fila of visual.filas"><td *ngFor="let celda of fila">{{ celda }}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
       <p class="offline-disclaimer" *ngIf="modoIA === 'offline_local'">
         Respuesta generada sin conexión con el último corte guardado. Verifica la fecha de datos antes de tomar decisiones.
       </p>

@@ -21,6 +21,7 @@ export interface Reserva {
   sucursal_direccion?: string;
   detalles: DetalleReserva[];
   created_at: string;
+  orden_venta_id?: number | null;
 }
 
 export interface ReservaCreateItem {

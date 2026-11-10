@@ -178,10 +178,22 @@
             <label><strong>Acciones de Mostrador:</strong></label>
             <div class="status-actions">
               <button
+                *ngIf="selectedReserva()!.estado === 'pendiente'"
                 class="btn btn-sm btn-success"
-                [disabled]="selectedReserva()!.estado === 'completada'"
+                (click)="enviarACaja(selectedReserva()!.id)">
+                Enviar a Caja para Cobro
+              </button>
+              <button
+                *ngIf="selectedReserva()!.estado === 'pendiente_pago'"
+                class="btn btn-sm btn-primary"
+                (click)="irACaja()">
+                Ir a Caja · Pago Pendiente
+              </button>
+              <button
+                *ngIf="selectedReserva()!.estado === 'pagada_pendiente_entrega'"
+                class="btn btn-sm btn-success"
                 (click)="updateEstado(selectedReserva()!.id, 'completada')">
-                Entregar Prendas (Completar)
+                Entregar Prendas Pagadas
               </button>
               <button
                 class="btn btn-sm btn-danger"

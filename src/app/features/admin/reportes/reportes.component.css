@@ -1076,6 +1076,84 @@ h1 {
   color: #1E293B;
 }
 
+.ai-visualization {
+  margin-top: 16px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #fff;
+  color: #14263d;
+  box-shadow: 0 8px 24px rgba(8, 23, 42, 0.14);
+}
+
+.ai-visualization-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.ai-visualization-header h3 { margin: 0 0 4px; font-size: 1.08rem; }
+.ai-visualization-header p { margin: 0; color: #526276; font-size: .82rem; }
+
+.ai-view-switch {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #f1f5f9;
+}
+
+.ai-view-switch button {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #334155;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ai-view-switch button.active { background: #14263d; color: #fff; }
+.ai-view-switch button:focus-visible { outline: 3px solid #d7ad45; outline-offset: 2px; }
+
+.ai-bar-chart {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(64px, 1fr));
+  align-items: end;
+  gap: 12px;
+  min-height: 270px;
+  padding: 14px 4px 0;
+  overflow-x: auto;
+}
+
+.ai-bar-item {
+  display: grid;
+  grid-template-rows: 28px 190px 34px;
+  align-items: end;
+  min-width: 64px;
+  text-align: center;
+}
+
+.ai-bar-value { color: #334155; font-size: .72rem; font-variant-numeric: tabular-nums; }
+.ai-bar-track { height: 190px; display: flex; align-items: flex-end; border-bottom: 1px solid #cbd5e1; }
+.ai-bar-fill { width: 100%; min-height: 6px; border-radius: 8px 8px 2px 2px; background: #235f88; transition: height .45s cubic-bezier(.16, 1, .3, 1); }
+.ai-bar-label { align-self: start; margin-top: 8px; color: #475569; font-size: .68rem; line-height: 1.2; }
+
+.ai-data-table-wrap { overflow-x: auto; }
+.ai-data-table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+.ai-data-table th, .ai-data-table td { padding: 10px 12px; border-bottom: 1px solid #dbe3ec; text-align: left; color: #14263d; }
+.ai-data-table th { background: #eef3f7; font-weight: 800; }
+.ai-data-table td:not(:first-child) { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 720px) {
+  .ai-visualization-header { flex-direction: column; }
+  .ai-view-switch { width: 100%; }
+  .ai-view-switch button { flex: 1; }
+  .ai-bar-chart { grid-template-columns: repeat(8, minmax(72px, 1fr)); }
+}
+
 .ai-export-actions {
   display: flex;
   justify-content: space-between;

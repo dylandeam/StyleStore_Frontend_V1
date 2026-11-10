@@ -10,6 +10,16 @@ import { TenantService } from '../../../core/services/tenant.service';
 import { PlatformTenantContextService } from '../../../core/services/platform-tenant-context.service';
 import { TenantSummary } from '../../../core/models/tenant.model';
 
+interface ReportVisualization {
+  tipo: 'barras' | 'lineas' | 'tabla';
+  titulo: string;
+  unidad?: string;
+  columnas: string[];
+  filas: Array<Array<string | number>>;
+  etiquetas: string[];
+  series: Array<{ nombre: string; valores: number[] }>;
+}
+
 @Component({
   selector: 'app-reportes',
   standalone: true,
@@ -86,6 +96,8 @@ export class ReportesComponent implements OnInit {
   isExportingIAExcel: boolean = false;
   respuestaIA: string | null = null;
   kpisIA: Array<{ label: string; valor: string }> = [];
+  visualizacionIA: ReportVisualization | null = null;
+  vistaVisualizacionIA: 'grafico' | 'tabla' = 'grafico';
   isListeningIA: boolean = false;
   speechSupportedIA: boolean = false;
   private recognitionIA: any = null;
@@ -309,6 +321,7 @@ export class ReportesComponent implements OnInit {
     this.isLoadingIA = true;
     this.respuestaIA = null;
     this.kpisIA = [];
+    this.visualizacionIA = null;
     this.cdr.markForCheck();
 
     this.reportesService.consultarAsistenteIA(q).subscribe({
@@ -317,6 +330,8 @@ export class ReportesComponent implements OnInit {
           this.isLoadingIA = false;
           this.respuestaIA = res.respuesta;
           this.kpisIA = res.kpis || [];
+          this.visualizacionIA = res.visualizacion || null;
+          this.vistaVisualizacionIA = this.visualizacionIA?.tipo === 'tabla' ? 'tabla' : 'grafico';
           this.modoIA = res.modo_ia || (res.ia_powered ? 'online_groq' : 'online_local');
           this.proveedorIA = res.proveedor_ia || (res.ia_powered ? 'groq' : 'motor_analitico_local');
           this.datosIAActualizadosEn = res.datos_actualizados_en || null;
@@ -333,6 +348,7 @@ export class ReportesComponent implements OnInit {
           if (local) {
             this.respuestaIA = local.respuesta;
             this.kpisIA = local.kpis;
+            this.visualizacionIA = null;
             this.modoIA = 'offline_local';
             this.proveedorIA = local.proveedor_ia;
             this.datosIAActualizadosEn = local.datos_actualizados_en;
@@ -352,6 +368,16 @@ export class ReportesComponent implements OnInit {
     this.preguntaIA = '';
     this.respuestaIA = null;
     this.kpisIA = [];
+    this.visualizacionIA = null;
+  }
+
+  get maxValorVisualizacionIA(): number {
+    const valores = this.visualizacionIA?.series?.flatMap((serie) => serie.valores) || [];
+    return Math.max(...valores, 1);
+  }
+
+  alturaBarraIA(valor: number): number {
+    return Math.max(3, Math.round((Number(valor || 0) / this.maxValorVisualizacionIA) * 100));
   }
 
   exportarConsultaIAPDF(): void {

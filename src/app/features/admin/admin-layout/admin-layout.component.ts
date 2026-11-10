@@ -12,6 +12,7 @@ import { TenantSummary } from '../../../core/models/tenant.model';
 import { TenantService } from '../../../core/services/tenant.service';
 import { PlatformTenantContextService } from '../../../core/services/platform-tenant-context.service';
 import { BrandingService } from '../../../core/services/branding.service';
+import { OfflinePrefetchService } from '../../../core/services/offline-prefetch.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -29,6 +30,7 @@ export class AdminLayoutComponent implements OnInit {
   private readonly tenantService = inject(TenantService);
   readonly platformTenantContext = inject(PlatformTenantContextService);
   readonly branding = inject(BrandingService);
+  private readonly offlinePrefetch = inject(OfflinePrefetchService);
 
   readonly isSidebarCollapsed = signal<boolean>(false);
   readonly isMobileMenuOpen = signal<boolean>(false);
@@ -89,6 +91,7 @@ export class AdminLayoutComponent implements OnInit {
       });
 
     this.cargarNotificaciones();
+    this.offlinePrefetch.warmUp().subscribe();
   }
 
   private loadTenants(): void {

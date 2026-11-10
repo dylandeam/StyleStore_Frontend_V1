@@ -153,6 +153,26 @@ export class ReservasComponent implements OnInit {
     });
   }
 
+  enviarACaja(reservaId: number): void {
+    this.isLoading.set(true);
+    this.reservaService.enviarACaja(reservaId).subscribe({
+      next: (result) => {
+        this.successMessage.set(`Reserva #${reservaId} enviada a caja por Bs. ${result.total.toFixed(2)}.`);
+        this.closeDetail();
+        this.router.navigate(['/admin/caja']);
+      },
+      error: (err) => {
+        this.errorMessage.set(err.error?.detail || 'No se pudo enviar la reserva a caja.');
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  irACaja(): void {
+    this.closeDetail();
+    this.router.navigate(['/admin/caja']);
+  }
+
   cancelarReserva(reservaId: number): void {
     if (!confirm(`¿Deseas cancelar la reserva #${reservaId}? Se liberará el stock reservado a inventario.`)) return;
 
