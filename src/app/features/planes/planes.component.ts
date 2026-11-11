@@ -30,6 +30,7 @@ export class PlanesComponent implements OnInit {
   readonly editing = signal<SubscriptionPlan | null>(null);
   readonly subscriptions = signal<PlanSubscriptionsOverview | null>(null);
   readonly showCreator = signal(false);
+  readonly deletingPlan = signal<SubscriptionPlan | null>(null);
 
   selectedEmpresaId?: number;
   benefitsText = '';
@@ -121,6 +122,38 @@ export class PlanesComponent implements OnInit {
   }
 
   closeCreator(): void { this.showCreator.set(false); }
+
+  requestDelete(plan: SubscriptionPlan): void {
+    if (this.selectedEmpresaId || this.isProtectedPlan(plan.codigo)) return;
+    this.message.set(null);
+    this.error.set(null);
+    this.deletingPlan.set(plan);
+  }
+
+  closeDelete(): void {
+    if (!this.saving()) this.deletingPlan.set(null);
+  }
+
+  confirmDelete(): void {
+    const plan = this.deletingPlan();
+    if (!plan || this.saving()) return;
+    this.saving.set(true);
+    this.error.set(null);
+    this.plansService.deletePlan(plan.codigo).subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.deletingPlan.set(null);
+        this.message.set(`El plan ${plan.nombre} fue eliminado correctamente.`);
+        this.loadPlans();
+        this.loadSubscriptions();
+      },
+      error: (err) => {
+        this.saving.set(false);
+        this.deletingPlan.set(null);
+        this.error.set(err?.error?.detail || 'No se pudo eliminar el plan. Intenta nuevamente.');
+      },
+    });
+  }
 
   createPlan(): void {
     this.saving.set(true);

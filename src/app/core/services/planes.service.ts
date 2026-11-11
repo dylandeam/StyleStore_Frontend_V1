@@ -28,6 +28,10 @@ export class PlanesService {
     return this.http.post<SubscriptionPlan>(`${this.apiUrl}/planes/admin`, payload);
   }
 
+  deletePlan(code: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/planes/admin/${encodeURIComponent(code)}`);
+  }
+
   getSubscriptionsOverview(): Observable<PlanSubscriptionsOverview> {
     return this.http.get<PlanSubscriptionsOverview>(`${this.apiUrl}/planes/admin/suscripciones`);
   }

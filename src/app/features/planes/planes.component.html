@@ -65,7 +65,14 @@
             @if (!plan.beneficios.length) { <li class="muted">Contenido pendiente de configuración</li> }
           </ul>
           @if (isAdminView && isPlatformAdmin) {
-            <button class="primary" (click)="edit(plan)">Configurar plan</button>
+            <div class="plan-actions">
+              <button class="primary" (click)="edit(plan)">Configurar plan</button>
+              @if (!selectedEmpresaId && !isProtectedPlan(plan.codigo)) {
+                <button type="button" class="danger-quiet" (click)="requestDelete(plan)" [disabled]="saving()" [attr.aria-label]="'Eliminar el plan ' + plan.nombre">Eliminar plan</button>
+              } @else if (!selectedEmpresaId && isProtectedPlan(plan.codigo)) {
+                <span class="protected-note">Plan base protegido</span>
+              }
+            </div>
           } @else if (canContract) {
             <button class="primary" [disabled]="saving()" (click)="contract(plan)">
               {{ myContract()?.plan_codigo === plan.codigo ? 'Renovar plan' : 'Cambiar a este plan' }}
@@ -150,6 +157,21 @@
       <div class="checks"><label><input type="checkbox" name="featured" [(ngModel)]="featured"> Mostrar como destacado</label><label><input type="checkbox" name="active" [(ngModel)]="plan.active"> Plan visible</label></div>
       <footer><button type="button" class="secondary" (click)="closeEditor()">Cancelar</button><button class="primary" [disabled]="saving()">{{ saving() ? 'Guardando…' : 'Guardar configuración' }}</button></footer>
     </form>
+  </div>
+}
+
+@if (deletingPlan(); as plan) {
+  <div class="modal-backdrop" (click)="closeDelete()">
+    <section class="delete-dialog" role="alertdialog" aria-modal="true" aria-labelledby="delete-plan-title" aria-describedby="delete-plan-description" (click)="$event.stopPropagation()">
+      <div class="delete-icon" aria-hidden="true">×</div>
+      <h2 id="delete-plan-title">Eliminar {{ plan.nombre }}</h2>
+      <p id="delete-plan-description">Esta acción quitará el plan global y sus copias sin uso. No podrás recuperarlo después.</p>
+      <div class="delete-warning"><strong>Antes de continuar</strong><span>Si existen suscripciones o pagos asociados, el sistema conservará el plan y te pedirá desactivarlo.</span></div>
+      <footer>
+        <button type="button" class="secondary" (click)="closeDelete()" [disabled]="saving()">Conservar plan</button>
+        <button type="button" class="danger" (click)="confirmDelete()" [disabled]="saving()">{{ saving() ? 'Eliminando…' : 'Eliminar definitivamente' }}</button>
+      </footer>
+    </section>
   </div>
 }
 
