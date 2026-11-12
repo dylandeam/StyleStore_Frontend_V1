@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { VentaService } from '../../../core/services/venta.service';
-import { CambiosService, InventarioCambio, SolicitudCambioCreate } from '../../../core/services/cambios.service';
+import { CambiosService, InventarioCambio, SolicitudCambioCreate, SolicitudCambioDevolucion } from '../../../core/services/cambios.service';
 import { OrdenVenta } from '../../../core/models/venta.model';
 import { PagosService } from '../../../core/services/pagos.service';
 import { catchError, of, switchMap } from 'rxjs';
@@ -25,6 +25,7 @@ export class MisComprasComponent implements OnInit, OnDestroy {
 
   loading = true;
   compras: OrdenVenta[] = [];
+  solicitudesCambio: SolicitudCambioDevolucion[] = [];
   selectedOrden: OrdenVenta | null = null;
   showDetailModal = false;
 
@@ -59,10 +60,19 @@ export class MisComprasComponent implements OnInit, OnDestroy {
   saldoFavor = 0;
   reconciliationMessage = '';
   private reconciliationTimer: ReturnType<typeof setTimeout> | null = null;
+  private cambiosTimer: ReturnType<typeof setInterval> | null = null;
+  private readonly refreshCambiosOnFocus = (): void => this.cargarSolicitudesCambio();
 
   ngOnInit(): void {
     this.cambiosService.getPolitica().subscribe({ next: (p) => { this.plazoCambiosDias = p.plazo_cambios_dias; this.cdr.markForCheck(); } });
     this.cambiosService.getMiSaldo().subscribe({ next: (p) => { this.saldoFavor = Number(p.saldo) || 0; this.cdr.markForCheck(); } });
+    this.cargarSolicitudesCambio();
+    this.cambiosTimer = setInterval(() => {
+      if (this.solicitudesCambio.some((item) => !['completada', 'rechazada'].includes(item.estado))) {
+        this.cargarSolicitudesCambio();
+      }
+    }, 12000);
+    if (typeof window !== 'undefined') window.addEventListener('focus', this.refreshCambiosOnFocus);
     this.route.queryParams.subscribe((params) => {
       this.tabActiva = params['tab'] === 'cambios' ? 'cambios' : 'todas';
       this.cargarCompras();
@@ -72,6 +82,31 @@ export class MisComprasComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.reconciliationTimer) clearTimeout(this.reconciliationTimer);
+    if (this.cambiosTimer) clearInterval(this.cambiosTimer);
+    if (typeof window !== 'undefined') window.removeEventListener('focus', this.refreshCambiosOnFocus);
+  }
+
+  cargarSolicitudesCambio(): void {
+    this.cambiosService.getMisSolicitudes().subscribe({
+      next: (items) => {
+        this.solicitudesCambio = items || [];
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        // El historial de compras sigue disponible aunque falle esta sección.
+      },
+    });
+  }
+
+  estadoCambioLabel(estado: string): string {
+    const labels: Record<string, string> = {
+      pendiente: 'En revisión',
+      aceptada: 'Aprobada por la tienda',
+      pendiente_liquidacion: 'Pendiente de liquidación en caja',
+      completada: 'Proceso completado',
+      rechazada: 'Solicitud rechazada',
+    };
+    return labels[estado] || estado.replaceAll('_', ' ');
   }
 
   cambiarTab(tab: 'todas' | 'cambios'): void {
@@ -321,6 +356,7 @@ export class MisComprasComponent implements OnInit, OnDestroy {
         this.cambioSubmitting = false;
         this.cambioSuccessMessage = 'Tu solicitud ha sido registrada con éxito. Un encargado de StyleStore la revisará en breve.';
         this.cargarCompras();
+        this.cargarSolicitudesCambio();
         this.cdr.markForCheck();
         this.cdr.detectChanges();
         setTimeout(() => {

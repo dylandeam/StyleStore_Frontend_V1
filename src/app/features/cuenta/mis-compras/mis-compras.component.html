@@ -52,6 +52,32 @@
     </div>
   </div>
 
+  <section class="client-change-status" *ngIf="tabActiva === 'cambios' && solicitudesCambio.length > 0" aria-labelledby="client-change-title">
+    <div class="client-change-heading">
+      <div>
+        <span class="status-kicker">Seguimiento en tiempo real</span>
+        <h2 id="client-change-title">Mis solicitudes</h2>
+      </div>
+      <button type="button" class="refresh-change-status" (click)="cargarSolicitudesCambio()">Actualizar estados</button>
+    </div>
+    <article class="client-change-card" *ngFor="let cambio of solicitudesCambio" [attr.data-status]="cambio.estado">
+      <div class="client-change-main">
+        <div class="client-change-icon" aria-hidden="true">{{ cambio.estado === 'completada' ? '✓' : '↻' }}</div>
+        <div>
+          <strong>{{ cambio.tipo === 'cambio' ? 'Cambio de prenda' : 'Devolución' }} #{{ cambio.id }}</strong>
+          <p>{{ cambio.producto_original }} · {{ cambio.talla_original || 'Sin talla' }} · {{ cambio.color_original || 'Sin color' }}</p>
+          <small *ngIf="cambio.nota_venta_numero">Comprobante {{ cambio.nota_venta_numero }}</small>
+        </div>
+      </div>
+      <div class="client-change-result">
+        <span class="client-change-badge">{{ estadoCambioLabel(cambio.estado) }}</span>
+        <strong *ngIf="cambio.estado === 'completada' && cambio.monto_adicional">Diferencia pagada: Bs. {{ cambio.monto_adicional | number:'1.2-2' }}</strong>
+        <strong *ngIf="cambio.estado === 'completada' && cambio.monto_reembolsado">Importe devuelto: Bs. {{ cambio.monto_reembolsado | number:'1.2-2' }}</strong>
+        <small *ngIf="cambio.estado === 'completada'">La tienda confirmó y finalizó esta operación.</small>
+      </div>
+    </article>
+  </section>
+
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-state">
     <div class="spinner-border text-primary" role="status"></div>

@@ -1180,3 +1180,49 @@
   color: #1e3a8a;
   line-height: 1.45;
 }
+.client-change-status {
+  margin: 1.25rem 0;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border: 1px solid color-mix(in srgb, var(--tenant-primary, #163252) 20%, transparent);
+  border-radius: 20px;
+  background: var(--tenant-surface, #fff);
+  color: var(--tenant-text, #15263d);
+}
+
+.client-change-heading,
+.client-change-card,
+.client-change-main {
+  display: flex;
+  align-items: center;
+}
+
+.client-change-heading {
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.client-change-heading h2 { margin: .15rem 0 0; font-size: clamp(1.2rem, 2vw, 1.55rem); }
+.status-kicker { font-size: .72rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--tenant-primary, #163252); }
+.refresh-change-status { border: 1px solid currentColor; border-radius: 999px; padding: .6rem .9rem; background: transparent; color: inherit; font-weight: 700; cursor: pointer; }
+
+.client-change-card {
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--tenant-surface, #fff) 88%, var(--tenant-primary, #163252));
+}
+.client-change-card + .client-change-card { margin-top: .75rem; }
+.client-change-card[data-status='completada'] { border: 1px solid #86d5ae; background: #effbf5; color: #123c2a; }
+.client-change-main { gap: .8rem; min-width: 0; }
+.client-change-main p, .client-change-main small { display: block; margin: .2rem 0 0; opacity: .8; }
+.client-change-icon { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; flex: 0 0 2.5rem; border-radius: 50%; background: var(--tenant-primary, #163252); color: var(--tenant-on-primary, #fff); font-size: 1.2rem; font-weight: 900; }
+.client-change-result { display: grid; justify-items: end; gap: .25rem; text-align: right; }
+.client-change-badge { padding: .35rem .65rem; border-radius: 999px; background: var(--tenant-primary, #163252); color: var(--tenant-on-primary, #fff); font-size: .75rem; font-weight: 800; }
+
+@media (max-width: 680px) {
+  .client-change-heading, .client-change-card { align-items: stretch; flex-direction: column; }
+  .client-change-result { justify-items: start; text-align: left; }
+  .refresh-change-status { width: 100%; }
+}
