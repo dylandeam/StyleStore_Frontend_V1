@@ -205,36 +205,44 @@
       <!-- MODO DESPLEGADO: Agrupación en CATÁLOGO, VENTAS, ADMINISTRACIÓN y SISTEMA -->
       <nav class="sidebar-nav">
         @if (isPlatformAdmin) {
-          <div class="nav-group-header" (click)="toggleCategory('saas')">
-            <span class="nav-group-title">PLATAFORMA SAAS</span>
-            <span class="nav-group-chevron" [class.collapsed]="isCategoryCollapsed('saas')">⌄</span>
-          </div>
-          @if (!isCategoryCollapsed('saas')) {
-            <div class="nav-group-items">
-              <a routerLink="/admin/tenants" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">🏢</span>
-                <span class="nav-label">Gestión de Tenants</span>
-              </a>
-              <a routerLink="/admin/planes" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">💎</span>
-                <span class="nav-label">Planes Globales</span>
-              </a>
-              <a routerLink="/admin/notificaciones" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">📣</span>
-                <span class="nav-label">Avisos a Tenants</span>
-              </a>
-              <a routerLink="/admin/reportes" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">📈</span>
-                <span class="nav-label">Reportes por Tenant</span>
-              </a>
-            </div>
-          }
+          <section class="nav-package" aria-labelledby="package-platform-title">
+            <button type="button" class="nav-group-header package-header" (click)="toggleCategory('package-platform')"
+              [attr.aria-expanded]="!isCategoryCollapsed('package-platform')" aria-controls="package-platform-items">
+              <span class="package-index">P1</span>
+              <span id="package-platform-title" class="nav-group-title">Administración de la Plataforma</span>
+              <span class="nav-group-chevron" [class.collapsed]="isCategoryCollapsed('package-platform')" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </span>
+            </button>
+            @if (!isCategoryCollapsed('package-platform')) {
+              <div id="package-platform-items" class="nav-group-items package-items">
+                <a routerLink="/admin/tenants" routerLinkActive="active" class="nav-item"><span class="nav-icon">🏢</span><span class="nav-label">Gestionar Tenants</span></a>
+                <a routerLink="/admin/planes" routerLinkActive="active" class="nav-item"><span class="nav-icon">💎</span><span class="nav-label">Planes y Suscripciones</span></a>
+                @if (platformTenantContext.selected()) {
+                  <a routerLink="/admin/identidad" routerLinkActive="active" class="nav-item"><span class="nav-icon">🎨</span><span class="nav-label">Identidad de Marca</span></a>
+                }
+                <a routerLink="/admin/notificaciones" routerLinkActive="active" class="nav-item"><span class="nav-icon">📣</span><span class="nav-label">Avisos a las Empresas</span></a>
+              </div>
+            }
+          </section>
+
+          <section class="nav-package" aria-labelledby="package-saas-org-title">
+            <button type="button" class="nav-group-header package-header" (click)="toggleCategory('package-saas-org')"
+              [attr.aria-expanded]="!isCategoryCollapsed('package-saas-org')" aria-controls="package-saas-org-items">
+              <span class="package-index">P3</span>
+              <span id="package-saas-org-title" class="nav-group-title">Gestión Organizacional</span>
+              <span class="nav-group-chevron" [class.collapsed]="isCategoryCollapsed('package-saas-org')" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </span>
+            </button>
+            @if (!isCategoryCollapsed('package-saas-org')) {
+              <div id="package-saas-org-items" class="nav-group-items package-items">
+                <a routerLink="/dashboard" routerLinkActive="active" class="nav-item"><span class="nav-icon">📊</span><span class="nav-label">Dashboard e Indicadores</span></a>
+                <a routerLink="/admin/reportes" routerLinkActive="active" class="nav-item"><span class="nav-icon">📈</span><span class="nav-label">Reportes por Tenant</span></a>
+              </div>
+            }
+          </section>
         }
-        <!-- Dashboard general -->
-        <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-          <span class="nav-icon">📊</span>
-          <span class="nav-label">Dashboard</span>
-        </a>
 
         <!-- NAVEGACIÓN EXCLUSIVA CLIENTES -->
         @if (isCliente) {
@@ -314,187 +322,111 @@
             </div>
           }
         } @else if (!isPlatformAdmin) {
-          <!-- NAVEGACIÓN STAFF Y ADMINISTRACIÓN -->
-          <!-- Sección: CATÁLOGO -->
-          <div class="nav-group-header mt-group" (click)="toggleCategory('catalogo')">
-            <span class="nav-group-title">MODA Y CATÁLOGO</span>
-            <span class="nav-group-chevron" [class.collapsed]="isCategoryCollapsed('catalogo')">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </span>
-          </div>
-
-          @if (!isCategoryCollapsed('catalogo')) {
-            <div class="nav-group-items">
-              <a routerLink="/catalogo" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">✨</span>
-                <span class="nav-label">Vista Catálogo Tienda</span>
-              </a>
-
-              <a routerLink="/admin/promociones" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">🔥</span>
-                <span class="nav-label">Gestión de Promociones</span>
-              </a>
-
-              <a routerLink="/outfits" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">👗</span>
-                <span class="nav-label">Probador de Outfits</span>
-              </a>
-
-              <a routerLink="/vestidor-virtual" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">🪞</span>
-                <span class="nav-label">Vestidor Virtual AR</span>
-              </a>
-
-              <a routerLink="/admin/productos" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">👕</span>
-                <span class="nav-label">Gestión de Productos</span>
-              </a>
-
-              <a routerLink="/admin/colecciones" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">🧵</span>
-                <span class="nav-label">Colecciones</span>
-              </a>
-
-              <a routerLink="/admin/proximamente" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">⏳</span>
-                <span class="nav-label">Próximamente</span>
-              </a>
-
-              <a routerLink="/admin/inventario" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">📦</span>
-                <span class="nav-label">Control de Inventario</span>
-              </a>
-
-              @if (canManageStore) {
-                <a routerLink="/admin/categorias" routerLinkActive="active" class="nav-item">
-                  <span class="nav-icon">📁</span>
-                  <span class="nav-label">Categorías</span>
-                </a>
-
-                <a routerLink="/admin/colores" routerLinkActive="active" class="nav-item">
-                  <span class="nav-icon">🎨</span>
-                  <span class="nav-label">Colores</span>
-                </a>
-
-                <a routerLink="/admin/tallas" routerLinkActive="active" class="nav-item">
-                  <span class="nav-icon">📏</span>
-                  <span class="nav-label">Tallas</span>
-                </a>
-
-                <a routerLink="/admin/temporadas" routerLinkActive="active" class="nav-item">
-                  <span class="nav-icon">🗓️</span>
-                  <span class="nav-label">Temporadas</span>
-                </a>
+          @if (isAdmin) {
+            <section class="nav-package" aria-labelledby="package-tenant-platform-title">
+              <button type="button" class="nav-group-header package-header" (click)="toggleCategory('package-tenant-platform')" [attr.aria-expanded]="!isCategoryCollapsed('package-tenant-platform')" aria-controls="package-tenant-platform-items">
+                <span class="package-index">P1</span><span id="package-tenant-platform-title" class="nav-group-title">Administración de la Plataforma</span>
+                <span class="nav-group-chevron" [class.collapsed]="isCategoryCollapsed('package-tenant-platform')" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+              </button>
+              @if (!isCategoryCollapsed('package-tenant-platform')) {
+                <div id="package-tenant-platform-items" class="nav-group-items package-items">
+                  <a routerLink="/admin/identidad" routerLinkActive="active" class="nav-item"><span class="nav-icon">🎨</span><span class="nav-label">Identidad de Marca</span></a>
+                  <a routerLink="/planes" routerLinkActive="active" class="nav-item"><span class="nav-icon">💎</span><span class="nav-label">Plan y Facturación</span></a>
+                </div>
               }
-            </div>
+            </section>
           }
 
-          <!-- Sección: VENTAS Y OPERACIONES -->
-          <div class="nav-group-header mt-group" (click)="toggleCategory('ventas')">
-            <span class="nav-group-title">VENTAS Y OPERACIONES</span>
-            <span class="nav-group-chevron" [class.collapsed]="isCategoryCollapsed('ventas')">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </span>
-          </div>
-
-          @if (!isCategoryCollapsed('ventas')) {
-            <div class="nav-group-items">
-              <a routerLink="/admin/caja" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">💵</span>
-                <span class="nav-label">Gestionar Pagos</span>
-              </a>
-
-              <a routerLink="/admin/cambios" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">🔄</span>
-                <span class="nav-label">Cambios y Devoluciones</span>
-              </a>
-
-              @if (isAdmin && !isPlatformAdmin) {
-                <a routerLink="/admin/procesos-offline" routerLinkActive="active" class="nav-item">
-                  <span class="nav-icon">↻</span>
-                  <span class="nav-label">Procesos offline</span>
-                </a>
-              }
-
-              <a routerLink="/admin/reembolsos" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">💸</span>
-                <span class="nav-label">Reembolsos offline</span>
-              </a>
-
-              <a routerLink="/admin/experiencia" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">★</span>
-                <span class="nav-label">Calificaciones y Reclamos</span>
-              </a>
-
-              <a routerLink="/admin/reportes" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">📊</span>
-                <span class="nav-label">Suite de Reportes</span>
-              </a>
-
-              <a routerLink="/admin/ventas" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">💼</span>
-                <span class="nav-label">Gestión de Ventas</span>
-              </a>
-
-              <a routerLink="/admin/reservas" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">🔖</span>
-                <span class="nav-label">Reservas y Tickets</span>
-              </a>
-
-              <a routerLink="/admin/envios" routerLinkActive="active" class="nav-item">
-                <span class="nav-icon">🚚</span>
-                <span class="nav-label">Despachos y Envíos (Delivery)</span>
-              </a>
-            </div>
-          }
-
-          <!-- Sección: ADMINISTRACIÓN (Solo Staff) -->
-          @if (isStaff && !isPlatformAdmin) {
-            <div class="nav-group-header mt-group" (click)="toggleCategory('administracion')">
-              <span class="nav-group-title">ADMINISTRACIÓN</span>
-              <span class="nav-group-chevron" [class.collapsed]="isCategoryCollapsed('administracion')">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </span>
-            </div>
-
-            @if (!isCategoryCollapsed('administracion')) {
-              <div class="nav-group-items">
-                <a routerLink="/admin/sucursales" routerLinkActive="active" class="nav-item">
-                  <span class="nav-icon">🏢</span>
-                  <span class="nav-label">Sucursales</span>
-                </a>
-
-                <a routerLink="/admin/clientes" routerLinkActive="active" class="nav-item">
-                  <span class="nav-icon">🛍️</span>
-                  <span class="nav-label">Clientes</span>
-                </a>
-
-                @if (canManageStore) {
-                  <a routerLink="/admin/empleados" routerLinkActive="active" class="nav-item">
-                    <span class="nav-icon">👥</span>
-                    <span class="nav-label">Empleados</span>
-                  </a>
-
-                  <a routerLink="/admin/proveedores" routerLinkActive="active" class="nav-item">
-                    <span class="nav-icon">🏭</span>
-                    <span class="nav-label">Proveedores</span>
-                  </a>
-
-                  <a routerLink="/admin/compras" routerLinkActive="active" class="nav-item">
-                    <span class="nav-icon">📥</span>
-                    <span class="nav-label">Compras a Proveedores</span>
-                  </a>
+          <section class="nav-package" aria-labelledby="package-security-title">
+            <button type="button" class="nav-group-header package-header" (click)="toggleCategory('package-security')" [attr.aria-expanded]="!isCategoryCollapsed('package-security')" aria-controls="package-security-items">
+              <span class="package-index">P2</span><span id="package-security-title" class="nav-group-title">Seguridad y Control de Acceso</span>
+              <span class="nav-group-chevron" [class.collapsed]="isCategoryCollapsed('package-security')" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+            </button>
+            @if (!isCategoryCollapsed('package-security')) {
+              <div id="package-security-items" class="nav-group-items package-items">
+                @if (isAdmin) {
+                  <a routerLink="/admin/usuarios" routerLinkActive="active" class="nav-item"><span class="nav-icon">👥</span><span class="nav-label">Usuarios</span></a>
+                  <a routerLink="/admin/roles" routerLinkActive="active" class="nav-item"><span class="nav-icon">🛡️</span><span class="nav-label">Roles y Permisos</span></a>
+                  <a routerLink="/admin/procesos-offline" routerLinkActive="active" class="nav-item"><span class="nav-icon">↻</span><span class="nav-label">Sincronización Offline</span></a>
+                  <a routerLink="/admin/backups" routerLinkActive="active" class="nav-item"><span class="nav-icon">💾</span><span class="nav-label">Copias de Seguridad</span></a>
                 }
+                <a routerLink="/admin/bitacora" routerLinkActive="active" class="nav-item"><span class="nav-icon">📜</span><span class="nav-label">Bitácora de Actividad</span></a>
+              </div>
+            }
+          </section>
 
-                @if (isAdmin && !isPlatformAdmin) {
-                  <a routerLink="/admin/notificaciones" routerLinkActive="active" class="nav-item">
-                    <span class="nav-icon">📣</span>
-                    <span class="nav-label">Notificaciones y Campañas</span>
-                  </a>
+          <section class="nav-package" aria-labelledby="package-org-title">
+            <button type="button" class="nav-group-header package-header" (click)="toggleCategory('package-org')" [attr.aria-expanded]="!isCategoryCollapsed('package-org')" aria-controls="package-org-items">
+              <span class="package-index">P3</span><span id="package-org-title" class="nav-group-title">Gestión Organizacional</span>
+              <span class="nav-group-chevron" [class.collapsed]="isCategoryCollapsed('package-org')" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+            </button>
+            @if (!isCategoryCollapsed('package-org')) {
+              <div id="package-org-items" class="nav-group-items package-items">
+                <a routerLink="/dashboard" routerLinkActive="active" class="nav-item"><span class="nav-icon">📊</span><span class="nav-label">Dashboard e Indicadores</span></a>
+                <a routerLink="/admin/sucursales" routerLinkActive="active" class="nav-item"><span class="nav-icon">🏢</span><span class="nav-label">Sucursales</span></a>
+                <a routerLink="/admin/clientes" routerLinkActive="active" class="nav-item"><span class="nav-icon">🛍️</span><span class="nav-label">Clientes</span></a>
+                @if (canManageStore) { <a routerLink="/admin/empleados" routerLinkActive="active" class="nav-item"><span class="nav-icon">👥</span><span class="nav-label">Empleados</span></a> }
+                <a routerLink="/admin/reportes" routerLinkActive="active" class="nav-item"><span class="nav-icon">📈</span><span class="nav-label">Reportes y Analítica</span></a>
+              </div>
+            }
+          </section>
+
+          <section class="nav-package" aria-labelledby="package-catalog-title">
+            <button type="button" class="nav-group-header package-header" (click)="toggleCategory('package-catalog')" [attr.aria-expanded]="!isCategoryCollapsed('package-catalog')" aria-controls="package-catalog-items">
+              <span class="package-index">P4</span><span id="package-catalog-title" class="nav-group-title">Catálogo e Inventario</span>
+              <span class="nav-group-chevron" [class.collapsed]="isCategoryCollapsed('package-catalog')" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+            </button>
+            @if (!isCategoryCollapsed('package-catalog')) {
+              <div id="package-catalog-items" class="nav-group-items package-items">
+                <a routerLink="/admin/productos" routerLinkActive="active" class="nav-item"><span class="nav-icon">👕</span><span class="nav-label">Productos</span></a>
+                <a routerLink="/catalogo" routerLinkActive="active" class="nav-item"><span class="nav-icon">✨</span><span class="nav-label">Catálogo y Exportación</span></a>
+                <a routerLink="/admin/inventario" routerLinkActive="active" class="nav-item"><span class="nav-icon">📦</span><span class="nav-label">Inventario y Traspasos</span></a>
+                <a routerLink="/outfits" routerLinkActive="active" class="nav-item"><span class="nav-icon">👗</span><span class="nav-label">Outfits Personalizados</span></a>
+                <a routerLink="/vestidor-virtual" routerLinkActive="active" class="nav-item"><span class="nav-icon">🪞</span><span class="nav-label">Vestidor Virtual AR</span></a>
+                <a routerLink="/admin/colecciones" routerLinkActive="active" class="nav-item"><span class="nav-icon">🧵</span><span class="nav-label">Colecciones</span></a>
+                <a routerLink="/admin/proximamente" routerLinkActive="active" class="nav-item"><span class="nav-icon">⏳</span><span class="nav-label">Próximamente</span></a>
+                @if (canManageStore) {
+                  <a routerLink="/admin/categorias" routerLinkActive="active" class="nav-item"><span class="nav-icon">📁</span><span class="nav-label">Categorías</span></a>
+                  <a routerLink="/admin/colores" routerLinkActive="active" class="nav-item"><span class="nav-icon">🎨</span><span class="nav-label">Colores</span></a>
+                  <a routerLink="/admin/tallas" routerLinkActive="active" class="nav-item"><span class="nav-icon">📏</span><span class="nav-label">Tallas</span></a>
+                  <a routerLink="/admin/temporadas" routerLinkActive="active" class="nav-item"><span class="nav-icon">🗓️</span><span class="nav-label">Temporadas</span></a>
+                  <a routerLink="/admin/proveedores" routerLinkActive="active" class="nav-item"><span class="nav-icon">🏭</span><span class="nav-label">Proveedores</span></a>
+                  <a routerLink="/admin/compras" routerLinkActive="active" class="nav-item"><span class="nav-icon">📥</span><span class="nav-label">Compras a Proveedores</span></a>
                 }
               </div>
             }
-          }
+          </section>
+
+          <section class="nav-package" aria-labelledby="package-sales-title">
+            <button type="button" class="nav-group-header package-header" (click)="toggleCategory('package-sales')" [attr.aria-expanded]="!isCategoryCollapsed('package-sales')" aria-controls="package-sales-items">
+              <span class="package-index">P5</span><span id="package-sales-title" class="nav-group-title">Ventas, Pagos y Logística</span>
+              <span class="nav-group-chevron" [class.collapsed]="isCategoryCollapsed('package-sales')" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+            </button>
+            @if (!isCategoryCollapsed('package-sales')) {
+              <div id="package-sales-items" class="nav-group-items package-items">
+                <a routerLink="/admin/reservas" routerLinkActive="active" class="nav-item"><span class="nav-icon">🔖</span><span class="nav-label">Reservas y Tickets</span></a>
+                <a routerLink="/admin/ventas" routerLinkActive="active" class="nav-item"><span class="nav-icon">💼</span><span class="nav-label">Ventas Online y Offline</span></a>
+                <a routerLink="/admin/caja" routerLinkActive="active" class="nav-item"><span class="nav-icon">💵</span><span class="nav-label">Pagos y Comprobantes</span></a>
+                <a routerLink="/admin/envios" routerLinkActive="active" class="nav-item"><span class="nav-icon">🚚</span><span class="nav-label">Envíos y Delivery</span></a>
+              </div>
+            }
+          </section>
+
+          <section class="nav-package" aria-labelledby="package-experience-title">
+            <button type="button" class="nav-group-header package-header" (click)="toggleCategory('package-experience')" [attr.aria-expanded]="!isCategoryCollapsed('package-experience')" aria-controls="package-experience-items">
+              <span class="package-index">P6</span><span id="package-experience-title" class="nav-group-title">Experiencia y Atención al Cliente</span>
+              <span class="nav-group-chevron" [class.collapsed]="isCategoryCollapsed('package-experience')" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+            </button>
+            @if (!isCategoryCollapsed('package-experience')) {
+              <div id="package-experience-items" class="nav-group-items package-items">
+                <a routerLink="/admin/cambios" routerLinkActive="active" class="nav-item"><span class="nav-icon">🔄</span><span class="nav-label">Cambios y Devoluciones</span></a>
+                <a routerLink="/admin/experiencia" routerLinkActive="active" class="nav-item"><span class="nav-icon">★</span><span class="nav-label">Calificaciones y Reclamos</span></a>
+                <a routerLink="/admin/promociones" routerLinkActive="active" class="nav-item"><span class="nav-icon">🔥</span><span class="nav-label">Promociones</span></a>
+                @if (isAdmin) { <a routerLink="/admin/notificaciones" routerLinkActive="active" class="nav-item"><span class="nav-icon">📣</span><span class="nav-label">Notificaciones y Campañas</span></a> }
+                <a routerLink="/admin/reembolsos" routerLinkActive="active" class="nav-item"><span class="nav-icon">💸</span><span class="nav-label">Reembolsos</span></a>
+              </div>
+            }
+          </section>
         }
       </nav>
     }
